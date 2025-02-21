@@ -39,63 +39,65 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Welcome back, John Doe!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _isButtonPressed = !_isButtonPressed;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _isButtonPressed ? Colors.deepPurple : Colors.blue,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                textStyle: const TextStyle(fontSize: 16),
+            if (_selectedIndex == 0) ...[
+              const Text(
+                'Welcome back, John Doe!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              child: const Text('Find Sessions'),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _isButtonPressed = !_isButtonPressed;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _isButtonPressed ? Colors.deepPurple : Colors.blue,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+                child: const Text('Find Sessions'),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Next Session',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Date: March 1, 2025',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Text(
-                    'Time: 10:00 AM - 11:00 AM',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Text(
-                    'Day: Saturday',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Next Session',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Date: March 1, 2025',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      'Time: 10:00 AM - 11:00 AM',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      'Day: Saturday',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
+            ],
             Expanded(child: _screens[_selectedIndex]),
           ],
         ),
