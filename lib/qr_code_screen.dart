@@ -55,10 +55,16 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
-                  child: QRView(
-                    key: qrKey,
-                    onQRViewCreated: _onQRViewCreated,
+                  child: Center(
+                    child: Text(
+                      'Camera window',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
+                  // child: QRView(
+                  //   key: qrKey,
+                  //   onQRViewCreated: _onQRViewCreated,
+                  // ),
                 ),
               ),
             ),
