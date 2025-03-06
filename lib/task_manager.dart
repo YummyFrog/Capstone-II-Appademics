@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-// Import FFI from the sqflite_common_ffi package:
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
 import 'database_helper.dart';
 
 void main() {
-  // 1. Initialize FFI
   sqfliteFfiInit();
 
-  // 2. Set the global database factory to the FFI one
   databaseFactory = databaseFactoryFfi;
 
   runApp(const MyApp());
@@ -20,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter SQLite FFI Demo',
+      title: 'Task Manager',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -75,7 +71,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SQLite Tasks (FFI)'),
+        title: const Text('Student Task Manager'),
       ),
       body: Column(
         children: [
