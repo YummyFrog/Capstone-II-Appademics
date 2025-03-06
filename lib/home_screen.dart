@@ -12,7 +12,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool _isButtonPressed = false;
+  bool _isFilterDropdownOpen = false;
+  String _searchQuery = '';
 
   final List<Widget> _screens = [
     const Center(child: Text('Home Screen', style: TextStyle(fontSize: 18))),
@@ -24,6 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _toggleFilterDropdown() {
+    setState(() {
+      _isFilterDropdownOpen = !_isFilterDropdownOpen;
     });
   }
 
@@ -45,20 +52,61 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
+
+              // Search Bar
+              TextField(
+                onChanged: (value) {
                   setState(() {
-                    _isButtonPressed = !_isButtonPressed;
+                    _searchQuery = value;
                   });
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isButtonPressed ? Colors.deepPurple : Colors.blue,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  textStyle: const TextStyle(fontSize: 16),
+                decoration: InputDecoration(
+                  labelText: 'Search Sessions',
+                  border: OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.filter_list),
+                    onPressed: _toggleFilterDropdown,
+                  ),
                 ),
-                child: const Text('Find Sessions'),
               ),
               const SizedBox(height: 16),
+
+              // Filter Options Dropdown
+              if (_isFilterDropdownOpen) ...[
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Filter By:',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildFilterOption('Subjects'),
+                      _buildFilterOption('Tutors'),
+                      _buildFilterOption('Time'),
+                      _buildFilterOption('Tutor Rating'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Next Session Info
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
@@ -69,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
@@ -115,6 +163,17 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),
+    );
+  }
+
+  Widget _buildFilterOption(String option) {
+    return ListTile(
+      title: Text(option),
+      onTap: () {
+        // Handle filter option selection
+        Navigator.pop(context); // Close the filter dropdown
+        print('Selected filter: $option'); // Add your filter handling logic here
+      },
     );
   }
 }
