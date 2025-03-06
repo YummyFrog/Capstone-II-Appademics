@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'calendar_screen.dart'; // Import for CalendarScreen
 import 'qr_code_screen.dart'; // Import for QRCodeScreen
 import 'profile_screen.dart'; // Import for ProfileScreen
+import 'task_manager_screen.dart'; // Import for TaskPage
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -91,6 +92,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: const Text('Help'),
                         onTap: () {
                           // Handle help tap
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.task),
+                        title: const Text('Task Manager'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TaskPage(),
+                            ),
+                          );
                         },
                       ),
                     ],
