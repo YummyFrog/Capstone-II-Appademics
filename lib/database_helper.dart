@@ -4,15 +4,14 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   static Database? _database;
 
-  factory DatabaseHelper() {
-    return _instance;
-  }
+  factory DatabaseHelper() => _instance;
 
   DatabaseHelper._internal();
 
+  static final DatabaseHelper instance = DatabaseHelper();
+
   Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
+    _database ??= await _initDatabase();
     return _database!;
   }
 
@@ -22,8 +21,13 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('ALTER TABLE tasks ADD COLUMN completed INTEGER DEFAULT 0');
+        }
+      },
     );
   }
 
@@ -31,7 +35,8 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tasks(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT
+        title TEXT,
+        completed INTEGER DEFAULT 0
       )
     ''');
   }
@@ -49,5 +54,30 @@ class DatabaseHelper {
   Future<int> deleteTask(int id) async {
     final db = await database;
     return await db.delete('tasks', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<int> updateTask(int id, Map<String, dynamic> values) async {
+    final db = await database;
+    return await db.update(
+      'tasks',
+      values,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> updateTaskCompletion(int id, bool completed) async {
+    final db = await database;
+    return await db.update(
+      'tasks',
+      {'completed': completed ? 1 : 0},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> deleteCompletedTasks() async {
+    final db = await database;
+    return await db.delete('tasks', where: 'completed = ?', whereArgs: [1]);
   }
 }

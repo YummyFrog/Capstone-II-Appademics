@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database_helper.dart';
 
 class TaskPage extends StatefulWidget {
@@ -20,7 +19,6 @@ class _TaskPageState extends State<TaskPage> {
     _refreshTaskList();
   }
 
-  // Retrieve tasks from the database and update the state
   Future<void> _refreshTaskList() async {
     final data = await _dbHelper.getTasks();
     setState(() {
@@ -28,7 +26,6 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
-  // Insert a new task
   Future<void> _addTask() async {
     final taskTitle = _taskController.text.trim();
     if (taskTitle.isNotEmpty) {
@@ -38,9 +35,38 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
-  // Delete a task
   Future<void> _deleteTask(int id) async {
-    await _dbHelper.deleteTask(id);
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Deletion'),
+        content: const Text('Are you sure you want to delete this task?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete ?? false) {
+      await _dbHelper.deleteTask(id);
+      _refreshTaskList();
+    }
+  }
+
+  Future<void> _toggleTaskCompletion(int id, bool currentStatus) async {
+    await _dbHelper.updateTaskCompletion(id, !currentStatus);
+    _refreshTaskList();
+  }
+
+  Future<void> _clearCompletedTasks() async {
+    await _dbHelper.deleteCompletedTasks();
     _refreshTaskList();
   }
 
@@ -49,26 +75,28 @@ class _TaskPageState extends State<TaskPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Student Task Manager'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_sweep),
+            onPressed: _clearCompletedTasks,
+          ),
+        ],
       ),
       body: Column(
         children: [
-          // Input field and button to add new task
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                // Text field
                 Expanded(
                   child: TextField(
                     controller: _taskController,
                     decoration: const InputDecoration(
                       labelText: 'Task',
-                      border: OutlineInputBorder(),
+                      hintText: 'Enter task title',
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                // Add button
                 ElevatedButton(
                   onPressed: _addTask,
                   child: const Text('Add'),
@@ -76,20 +104,36 @@ class _TaskPageState extends State<TaskPage> {
               ],
             ),
           ),
-          // Display tasks
           Expanded(
             child: ListView.builder(
               itemCount: _tasks.length,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, index) {
                 final task = _tasks[index];
+                final completed = task['completed'] == 1;
                 return ListTile(
-                  title: Text(task['title'] ?? ''),
+                  title: Text(
+                    task['title'],
+                    style: TextStyle(
+                      decoration: completed ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                  leading: Checkbox(
+                    value: completed,
+                    onChanged: (_) => _toggleTaskCompletion(task['id'], completed),
+                  ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () => _deleteTask(task['id']),
                   ),
                 );
               },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: _clearCompletedTasks,
+              child: const Text('Clear Completed'),
             ),
           ),
         ],
