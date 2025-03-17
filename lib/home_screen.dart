@@ -14,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Tracks the selected index for the bottom navigation bar
   bool _isMenuOpen = false; // Tracks whether the menu is open or closed
+  bool _isFilterDropdownOpen = false; // Tracks whether the filter dropdown is open or closed
 
   final List<Widget> _screens = [
     const Center(
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _toggleFilterDropdown() {
     setState(() {
-      _isFilterDropdownOpen = !_isFilterDropdownOpen;
+      _isFilterDropdownOpen = !_isFilterDropdownOpen; // Toggle the filter dropdown state
     });
   }
 
