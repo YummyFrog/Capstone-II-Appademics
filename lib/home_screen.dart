@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'calendar_screen.dart';
-import 'qr_code_screen.dart';
-import 'profile_screen.dart';
+import 'calendar_screen.dart'; // Import for CalendarScreen
+import 'qr_code_screen.dart'; // Import for QRCodeScreen
+import 'profile_screen.dart'; // Import for ProfileScreen
+import 'task_manager_screen.dart'; // Import for TaskPage
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,12 +12,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  bool _isFilterDropdownOpen = false;
-  String _searchQuery = '';
+  int _selectedIndex = 0; // Tracks the selected index for the bottom navigation bar
+  bool _isMenuOpen = false; // Tracks whether the menu is open or closed
 
   final List<Widget> _screens = [
-    const Center(child: Text('Home Screen', style: TextStyle(fontSize: 18))),
+    const Center(
+      child: Text(
+        'You logged in!',
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+    ),
     const CalendarScreen(),
     const QRCodeScreen(),
     const ProfileScreen(),
@@ -24,7 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _selectedIndex = index; // Update the selected index
+    });
+  }
+
+  void _toggleMenu() {
+    setState(() {
+      _isMenuOpen = !_isMenuOpen; // Toggle the menu state
     });
   }
 
@@ -38,142 +49,100 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Appademics'),
-        backgroundColor: Colors.deepPurple,
+        title: const Text('Home'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu), // Menu button
+          onPressed: _toggleMenu, // Toggle the menu
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (_selectedIndex == 0) ...[
-              const Text(
-                'Welcome back, John Doe!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
+      body: Stack(
+        children: [
+          // Main content with backdrop tap
+          GestureDetector(
+            onTap: () {
+              if (_isMenuOpen) {
+                setState(() {
+                  _isMenuOpen = false; // Close the menu
+                });
+              }
+            },
+            child: _screens[_selectedIndex], // Display the selected screen
+          ),
 
-              // Search Bar
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Search Sessions',
-                  border: OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.filter_list),
-                    onPressed: _toggleFilterDropdown,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Filter Options Dropdown
-              if (_isFilterDropdownOpen) ...[
-                Container(
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
+          // Sliding menu
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300), // Animation duration
+            width: _isMenuOpen ? MediaQuery.of(context).size.width * 0.5 : 0, // Halfway open
+            color: Colors.blueGrey[100], // Menu background color
+            child: _isMenuOpen
+                ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Filter By:',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                          'Menu',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      _buildFilterOption('Subjects'),
-                      _buildFilterOption('Tutors'),
-                      _buildFilterOption('Time'),
-                      _buildFilterOption('Tutor Rating'),
+                      const Divider(),
+                      ListTile(
+                        leading: const Icon(Icons.settings),
+                        title: const Text('Settings'),
+                        onTap: () {
+                          // Handle settings tap
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.help),
+                        title: const Text('Help'),
+                        onTap: () {
+                          // Handle help tap
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.task),
+                        title: const Text('Task Manager'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TaskPage(),
+                            ),
+                          );
+                        },
+                      ),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Next Session Info
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Next Session',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Date: March 1, 2025',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Time: 10:00 AM - 11:00 AM',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Day: Saturday',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 32),
-            ],
-            Expanded(child: _screens[_selectedIndex]),
-          ],
-        ),
+                  )
+                : null, // Don't render anything when the menu is closed
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendar'),
-          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'QR Code'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code),
+            label: 'QR Code',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.deepPurple,
-        unselectedItemColor: Colors.blue,
+        selectedItemColor: Colors.deepPurple, // Selected item color
+        unselectedItemColor: Colors.blue, // Unselected item color
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),
-    );
-  }
-
-  Widget _buildFilterOption(String option) {
-    return ListTile(
-      title: Text(option),
-      onTap: () {
-        // Handle filter option selection
-        Navigator.pop(context); // Close the filter dropdown
-        print('Selected filter: $option'); // Add your filter handling logic here
-      },
     );
   }
 }

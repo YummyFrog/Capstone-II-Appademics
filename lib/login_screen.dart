@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-
+import 'register_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -37,6 +37,15 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
     }
+  }
+
+  void _navigateToRegister() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const RegisterScreen(),
+      ),
+    );
   }
 
   @override
@@ -90,6 +99,11 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: _login,
                 child: const Text('Login'),
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: _navigateToRegister,
+                child: const Text('Don\'t have an account? Register here'),
               ),
             ],
           ),
