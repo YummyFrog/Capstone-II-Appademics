@@ -3,6 +3,7 @@ import 'calendar_screen.dart'; // Import for CalendarScreen
 import 'qr_code_screen.dart'; // Import for QRCodeScreen
 import 'profile_screen.dart'; // Import for ProfileScreen
 import 'task_manager_screen.dart'; // Import for TaskPage
+import 'settings_screen.dart'; // Import for UserSettingsScreen
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Tracks the selected index for the bottom navigation bar
   bool _isMenuOpen = false; // Tracks whether the menu is open or closed
-  bool _isFilterDropdownOpen = false; // Tracks whether the filter dropdown is open or closed
 
   final List<Widget> _screens = [
     const Center(
@@ -37,12 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _toggleMenu() {
     setState(() {
       _isMenuOpen = !_isMenuOpen; // Toggle the menu state
-    });
-  }
-
-  void _toggleFilterDropdown() {
-    setState(() {
-      _isFilterDropdownOpen = !_isFilterDropdownOpen; // Toggle the filter dropdown state
     });
   }
 
@@ -91,7 +85,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         leading: const Icon(Icons.settings),
                         title: const Text('Settings'),
                         onTap: () {
-                          // Handle settings tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserSettingsScreen(), // Navigate to UserSettingsScreen
+                            ),
+                          );
                         },
                       ),
                       ListTile(
@@ -139,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.deepPurple, // Selected item color
+        selectedItemColor: Colors.blue, // Selected item color
         unselectedItemColor: Colors.blue, // Unselected item color
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
