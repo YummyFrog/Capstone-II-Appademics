@@ -14,14 +14,14 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome to the Dashboard'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Colors.blue,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
@@ -44,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: Colors.orange, // Solid orange for AppBar
+        backgroundColor: Colors.blue, // Solid orange for AppBar
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -110,7 +110,7 @@ class ProfileScreen extends StatelessWidget {
       elevation: 8,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
-        leading: Icon(icon, color: Colors.deepPurple),
+        leading: Icon(icon, color: Colors.blueAccent),
         title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         trailing: const Icon(Icons.arrow_forward),
         onTap: () {
