@@ -14,14 +14,14 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome to the Dashboard'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue, // Changed to blue
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.blue, // Changed to blue
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
@@ -44,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: Colors.blue, // Solid orange for AppBar
+        backgroundColor: Colors.blue, // Changed to blue
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -93,7 +93,7 @@ class ProfileScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange, // Same color as AppBar
+                  backgroundColor: Colors.blueAccent, // Changed to BlueAccent
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
                 child: const Text('Logout', style: TextStyle(fontSize: 18, color: Colors.white)),
@@ -110,7 +110,7 @@ class ProfileScreen extends StatelessWidget {
       elevation: 8,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
-        leading: Icon(icon, color: Colors.blueAccent),
+        leading: Icon(icon, color: Colors.blueAccent), // Changed to blueAccent
         title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         trailing: const Icon(Icons.arrow_forward),
         onTap: () {
@@ -133,7 +133,7 @@ class PersonalInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Personal Information'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Personal Information'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -154,7 +154,7 @@ class PersonalInfoScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple[100],
+                  backgroundColor: Colors.blueAccent, // Changed to BlueAccent
                 ),
                 child: const Text('Save Changes'),
               ),
@@ -164,7 +164,7 @@ class PersonalInfoScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple[100],
+                  backgroundColor: Colors.blueAccent, // Changed to BlueAccent
                 ),
                 child: const Text('Cancel'),
               ),
@@ -235,7 +235,7 @@ class QualificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Qualifications'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Qualifications'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -251,7 +251,7 @@ class QualificationsScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Save Changes'),
             ),
@@ -293,7 +293,7 @@ class AvailabilityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tutoring Availability'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Tutoring Availability'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -309,7 +309,7 @@ class AvailabilityScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Save Availability'),
             ),
@@ -325,7 +325,7 @@ class SessionManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Session Management'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Session Management'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -337,7 +337,7 @@ class SessionManagementScreen extends StatelessWidget {
                 // Handle any additional actions
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Add New Session'),
             ),
@@ -376,7 +376,7 @@ class PaymentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Payments & Earnings'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Payments & Earnings'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -398,7 +398,7 @@ class PaymentsScreen extends StatelessWidget {
                 // Handle withdrawal logic
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Withdraw Funds'),
             ),
@@ -542,7 +542,7 @@ class PaymentsScreen extends StatelessWidget {
                 // Handle add payment method logic
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Add New Method'),
             ),
@@ -587,7 +587,7 @@ class ResourcesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Resources & Course Management'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Resources & Course Management'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -599,7 +599,7 @@ class ResourcesScreen extends StatelessWidget {
                 // Handle upload logic
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Upload Resource'),
             ),
@@ -636,7 +636,7 @@ class SupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Support & Help Center'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Support & Help Center'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -648,7 +648,7 @@ class SupportScreen extends StatelessWidget {
                 // Handle ticket submission
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Submit a Ticket'),
             ),
@@ -678,7 +678,7 @@ class EngagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Student Engagement & Ratings'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Student Engagement & Ratings'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -714,7 +714,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings & Customization'), backgroundColor: Colors.deepPurple),
+      appBar: AppBar(title: const Text('Settings & Customization'), backgroundColor: Colors.blue), // Changed to blue
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -735,7 +735,7 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple[100],
+                backgroundColor: Colors.blueAccent, // Changed to BlueAccent
               ),
               child: const Text('Save Changes'),
             ),
@@ -745,3 +745,4 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+
