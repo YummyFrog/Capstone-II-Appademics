@@ -52,6 +52,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Stack(
         children: [
+          // Top header bar
+          Container(
+            height: 60,
+            color: Colors.blue, // Header background color
+            alignment: Alignment.center,
+            child: const Text(
+              'Appademics',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Header text color
+              ),
+            ),
+          ),
           // Main content with backdrop tap
           GestureDetector(
             onTap: () {
@@ -61,14 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               }
             },
-            child: _screens[_selectedIndex], // Display the selected screen
+            child: Padding(
+              padding: const EdgeInsets.only(top: 60.0), // Push content down to avoid overlap with header
+              child: _screens[_selectedIndex], // Display the selected screen
+            ),
           ),
 
           // Sliding menu
           AnimatedContainer(
             duration: const Duration(milliseconds: 300), // Animation duration
             width: _isMenuOpen ? MediaQuery.of(context).size.width * 0.5 : 0, // Halfway open
-            color: Colors.blueGrey[100], // Menu background color
+            color: const Color.fromARGB(255, 124, 187, 214), // Menu background color
             child: _isMenuOpen
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,3 +163,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
