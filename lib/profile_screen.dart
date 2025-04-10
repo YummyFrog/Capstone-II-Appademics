@@ -130,6 +130,8 @@ class PersonalInfoScreen extends StatelessWidget {
   final TextEditingController countryController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
 
+  PersonalInfoScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -232,6 +234,8 @@ class QualificationsScreen extends StatelessWidget {
   final TextEditingController degreeController = TextEditingController();
   final TextEditingController universityController = TextEditingController();
 
+  QualificationsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -290,6 +294,8 @@ class QualificationsScreen extends StatelessWidget {
 
 // Tutoring Availability Screen
 class AvailabilityScreen extends StatelessWidget {
+  const AvailabilityScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -322,6 +328,8 @@ class AvailabilityScreen extends StatelessWidget {
 
 // Session Management Screen
 class SessionManagementScreen extends StatelessWidget {
+  const SessionManagementScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -584,6 +592,8 @@ class PaymentsScreen extends StatelessWidget {
 
 // Resources Screen
 class ResourcesScreen extends StatelessWidget {
+  const ResourcesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -633,6 +643,8 @@ class ResourcesScreen extends StatelessWidget {
 
 // Support Screen
 class SupportScreen extends StatelessWidget {
+  const SupportScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -675,6 +687,8 @@ class SupportScreen extends StatelessWidget {
 
 // Engagement Screen
 class EngagementScreen extends StatelessWidget {
+  const EngagementScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -711,6 +725,8 @@ class EngagementScreen extends StatelessWidget {
 
 // Settings Screen
 class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

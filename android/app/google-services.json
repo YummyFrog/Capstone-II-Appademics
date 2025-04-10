@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "464295412559",
+    "firebase_url": "https://appademics-2b1cb-default-rtdb.firebaseio.com",
+    "project_id": "appademics-2b1cb",
+    "storage_bucket": "appademics-2b1cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464295412559:android:e0030ad9934c1208d77b3a",
+        "android_client_info": {
+          "package_name": "com.example.appademics"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf-ys0-vfcRlHq9mxRndM5s6P63AB2Xho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

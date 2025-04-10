@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
-import 'register_screen.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
   sqfliteFfiInit(); // Initialize SQLite FFI
   databaseFactory = databaseFactoryFfi; // Set the database factory
 
