@@ -71,15 +71,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               ),
             ],
           ),
-          ExpansionTile(
-            title: const Text('Help & Support'),
-            children: [
-              ListTile(
-                title: const Text('Contact Support'),
-                onTap: _showContactSupportDialog,
-              ),
-            ],
-          ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
@@ -89,7 +80,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue, // Match the AppBar color
+              backgroundColor: Colors.blue,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
@@ -120,13 +111,15 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () {
-            // Handle save action
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Profile updated successfully!')),
-            );
-          }, child: const Text('Save')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Profile updated successfully!')),
+              );
+            },
+            child: const Text('Save'),
+          ),
         ],
       ),
     );
@@ -159,13 +152,15 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () {
-            // Handle change password action
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Password changed successfully!')),
-            );
-          }, child: const Text('Change Password')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Password changed successfully!')),
+              );
+            },
+            child: const Text('Change Password'),
+          ),
         ],
       ),
     );
@@ -206,27 +201,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Save')),
-        ],
-      ),
-    );
-  }
-
-  void _showContactSupportDialog() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Contact Support'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            TextField(decoration: InputDecoration(labelText: 'Your Name')),
-            TextField(decoration: InputDecoration(labelText: 'Your Email')),
-            TextField(decoration: InputDecoration(labelText: 'Message'), maxLines: 3),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Send')),
         ],
       ),
     );
