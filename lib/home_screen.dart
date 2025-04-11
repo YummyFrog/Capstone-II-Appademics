@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'calendar_screen.dart'; // Import for CalendarScreen
-import 'qr_code_screen.dart'; // Import for QRCodeScreen
-import 'profile_screen.dart'; // Import for ProfileScreen
-import 'task_manager_screen.dart'; // Import for TaskPage
-import 'settings_screen.dart'; // Import for UserSettingsScreen
+
+import 'calendar_screen.dart';
+import 'qr_code_screen.dart';
+import 'profile_screen.dart';
+import 'task_manager_screen.dart';
+import 'settings_screen.dart';
+import 'help_support_screen.dart'; // Import the Help & Support screen
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,8 +15,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0; // Tracks the selected index for the bottom navigation bar
-  bool _isMenuOpen = false; // Tracks whether the menu is open or closed
+  int _selectedIndex = 0;
+  bool _isMenuOpen = false;
+  final TextEditingController _searchController = TextEditingController();
 
   final List<Widget> _screens = [
     const Center(
@@ -30,14 +33,53 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Update the selected index
+      _selectedIndex = index;
     });
   }
 
   void _toggleMenu() {
     setState(() {
-      _isMenuOpen = !_isMenuOpen; // Toggle the menu state
+      _isMenuOpen = !_isMenuOpen;
     });
+  }
+
+  void _openSortDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text("Sort by"),
+        children: [
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context);
+              // Implement sort A-Z logic
+            },
+            child: const Text("Alphabet (A-Z)"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context);
+              // Implement sort Z-A logic
+            },
+            child: const Text("Alphabet (Z-A)"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context);
+              // Implement newest first logic
+            },
+            child: const Text("Newest First"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context);
+              // Implement oldest first logic
+            },
+            child: const Text("Oldest First"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -46,46 +88,83 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Home'),
         leading: IconButton(
-          icon: const Icon(Icons.menu), // Menu button
-          onPressed: _toggleMenu, // Toggle the menu
+          icon: const Icon(Icons.menu),
+          onPressed: _toggleMenu,
         ),
       ),
       body: Stack(
         children: [
-          // Top header bar
-          Container(
-            height: 60,
-            color: Colors.blue, // Header background color
-            alignment: Alignment.center,
-            child: const Text(
-              'Appademics',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white, // Header text color
+          Column(
+            children: [
+              Container(
+                height: 60,
+                color: Colors.blue,
+                alignment: Alignment.center,
+                child: const Text(
+                  'Appademics',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search subjects...',
+                          prefixIcon: const Icon(Icons.search),
+                          suffixIcon: _searchController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    setState(() {
+                                      _searchController.clear();
+                                    });
+                                  },
+                                )
+                              : null,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                        ),
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.sort),
+                      onPressed: _openSortDialog,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          // Main content with backdrop tap
           GestureDetector(
             onTap: () {
               if (_isMenuOpen) {
                 setState(() {
-                  _isMenuOpen = false; // Close the menu
+                  _isMenuOpen = false;
                 });
               }
             },
             child: Padding(
-              padding: const EdgeInsets.only(top: 60.0), // Push content down to avoid overlap with header
-              child: _screens[_selectedIndex], // Display the selected screen
+              padding: const EdgeInsets.only(top: 128.0), // Adjusted for Appademics + Search Bar
+              child: _screens[_selectedIndex],
             ),
           ),
-
-          // Sliding menu
           AnimatedContainer(
-            duration: const Duration(milliseconds: 300), // Animation duration
-            width: _isMenuOpen ? MediaQuery.of(context).size.width * 0.5 : 0, // Halfway open
-            color: const Color.fromARGB(255, 124, 187, 214), // Menu background color
+            duration: const Duration(milliseconds: 300),
+            width: _isMenuOpen ? MediaQuery.of(context).size.width * 0.5 : 0,
+            color: const Color.fromARGB(255, 124, 187, 214),
             child: _isMenuOpen
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,16 +184,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const UserSettingsScreen(), // Navigate to UserSettingsScreen
+                              builder: (context) => const UserSettingsScreen(),
                             ),
                           );
                         },
                       ),
                       ListTile(
                         leading: const Icon(Icons.help),
-                        title: const Text('Help'),
+                        title: const Text('Help & Support'),
                         onTap: () {
-                          // Handle help tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HelpSupportScreen(),
+                            ),
+                          );
                         },
                       ),
                       ListTile(
@@ -131,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   )
-                : null, // Don't render anything when the menu is closed
+                : null,
           ),
         ],
       ),
@@ -155,12 +239,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue, // Selected item color
-        unselectedItemColor: Colors.blue, // Unselected item color
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),
     );
   }
 }
-
