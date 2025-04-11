@@ -1,4 +1,6 @@
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart'; // Import for ffi support
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -8,16 +10,17 @@ class DatabaseHelper {
 
   DatabaseHelper._internal();
 
-  static final DatabaseHelper instance = DatabaseHelper();
-
   Future<Database> get database async {
-    _database ??= await _initDatabase();
+    if (_database != null) return _database!;
+    _database = await _initDatabase();
     return _database!;
   }
 
   Future<Database> _initDatabase() async {
+    // Use ffi for testing purposes, especially for Windows
+    sqfliteFfiInit(); 
     final dbPath = await getDatabasesPath();
-    final path = '$dbPath/tasks.db';
+    final path = join(dbPath, 'tasks.db');
 
     return await openDatabase(
       path,
@@ -36,14 +39,17 @@ class DatabaseHelper {
       CREATE TABLE tasks(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
+        description TEXT,
+        due_date TEXT,
+        priority TEXT,
         completed INTEGER DEFAULT 0
       )
     ''');
   }
 
-  Future<int> insertTask(String title) async {
+  Future<int> insertTask(Map<String, dynamic> task) async {
     final db = await database;
-    return await db.insert('tasks', {'title': title});
+    return await db.insert('tasks', task);
   }
 
   Future<List<Map<String, dynamic>>> getTasks() async {
@@ -66,7 +72,7 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> updateTaskCompletion(int id, bool completed) async {
+  Future<int> updateCompletion(int id, bool completed) async {
     final db = await database;
     return await db.update(
       'tasks',
