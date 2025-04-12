@@ -39,10 +39,10 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tasks(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
+        title TEXT NOT NULL,
         description TEXT,
-        due_date TEXT,
-        priority TEXT,
+        due_date TEXT NOT NULL,
+        priority TEXT NOT NULL,
         completed INTEGER DEFAULT 0
       )
     ''');
@@ -64,10 +64,10 @@ class DatabaseHelper {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getTasks() async {
+  Future<List<Map<String, dynamic>>> getTasks({String? orderBy = 'due_date ASC'}) async {
     try {
       final db = await database;
-      return await db.query('tasks');
+      return await db.query('tasks', orderBy: orderBy);
     } catch (e) {
       print('Get Tasks Error: $e');
       return [];
@@ -124,4 +124,5 @@ class DatabaseHelper {
     }
   }
 }
+
 
