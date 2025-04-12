@@ -5,7 +5,7 @@ import 'qr_code_screen.dart';
 import 'profile_screen.dart';
 import 'task_manager_screen.dart';
 import 'settings_screen.dart';
-import 'help_support_screen.dart'; // Import the Help & Support screen
+import 'help_support_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,28 +52,24 @@ class _HomeScreenState extends State<HomeScreen> {
           SimpleDialogOption(
             onPressed: () {
               Navigator.pop(context);
-              // Implement sort A-Z logic
             },
             child: const Text("Alphabet (A-Z)"),
           ),
           SimpleDialogOption(
             onPressed: () {
               Navigator.pop(context);
-              // Implement sort Z-A logic
             },
             child: const Text("Alphabet (Z-A)"),
           ),
           SimpleDialogOption(
             onPressed: () {
               Navigator.pop(context);
-              // Implement newest first logic
             },
             child: const Text("Newest First"),
           ),
           SimpleDialogOption(
             onPressed: () {
               Navigator.pop(context);
-              // Implement oldest first logic
             },
             child: const Text("Oldest First"),
           ),
@@ -84,6 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isHomePage = _selectedIndex == 0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -109,43 +107,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search subjects...',
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: _searchController.text.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    setState(() {
-                                      _searchController.clear();
-                                    });
-                                  },
-                                )
-                              : null,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+              if (isHomePage)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Search subjects...',
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: _searchController.text.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      setState(() {
+                                        _searchController.clear();
+                                      });
+                                    },
+                                  )
+                                : null,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                           ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                          onChanged: (value) {
+                            setState(() {});
+                          },
                         ),
-                        onChanged: (value) {
-                          setState(() {});
-                        },
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.sort),
-                      onPressed: _openSortDialog,
-                    ),
-                  ],
+                      IconButton(
+                        icon: const Icon(Icons.sort),
+                        onPressed: _openSortDialog,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
           GestureDetector(
@@ -157,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
             child: Padding(
-              padding: const EdgeInsets.only(top: 128.0), // Adjusted for Appademics + Search Bar
+              padding: EdgeInsets.only(top: isHomePage ? 128.0 : 60.0),
               child: _screens[_selectedIndex],
             ),
           ),
@@ -247,4 +246,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
 
