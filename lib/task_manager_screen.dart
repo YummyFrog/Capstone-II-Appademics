@@ -36,64 +36,71 @@ class _TaskPageState extends State<TaskPage> {
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(task == null ? 'Add Task' : 'Edit Task'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            TextField(controller: descController, decoration: const InputDecoration(labelText: 'Description')),
-            DropdownButton<String>(
-              value: priority,
-              items: ['High', 'Medium', 'Low'].map((String value) {
-                return DropdownMenuItem<String>(value: value, child: Text(value));
-              }).toList(),
-              onChanged: (val) => setState(() => priority = val!),
+      builder: (_) => StatefulBuilder(
+        builder: (context, setStateDialog) => AlertDialog(
+          title: Text(task == null ? 'Add Task' : 'Edit Task'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
+                TextField(controller: descController, decoration: const InputDecoration(labelText: 'Description')),
+                const SizedBox(height: 10),
+                DropdownButton<String>(
+                  value: priority,
+                  isExpanded: true,
+                  items: ['High', 'Medium', 'Low'].map((String value) {
+                    return DropdownMenuItem<String>(value: value, child: Text(value));
+                  }).toList(),
+                  onChanged: (val) => setStateDialog(() => priority = val!),
+                ),
+                TextButton(
+                  child: Text('Select Due Date: ${DateFormat('yyyy-MM-dd').format(dueDate)}'),
+                  onPressed: () async {
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialDate: dueDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+                    if (picked != null) setStateDialog(() => dueDate = picked);
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                if (titleController.text.trim().isEmpty) return;
+                if (task == null) {
+                  await _dbHelper.insertTask({
+                    'title': titleController.text,
+                    'description': descController.text,
+                    'due_date': dueDate.toIso8601String(),
+                    'priority': priority,
+                    'completed': 0,
+                  });
+                } else {
+                  await _dbHelper.updateTask(task['id'], {
+                    'title': titleController.text,
+                    'description': descController.text,
+                    'due_date': dueDate.toIso8601String(),
+                    'priority': priority,
+                    'completed': task['completed'],
+                  });
+                }
+                _refreshTaskList();
+                Navigator.pop(context);
+              },
+              child: const Text('Save'),
             ),
             TextButton(
-              child: Text('Select Due Date: ${DateFormat('yyyy-MM-dd').format(dueDate)}'),
-              onPressed: () async {
-                final picked = await showDatePicker(
-                  context: context,
-                  initialDate: dueDate,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                if (picked != null) setState(() => dueDate = picked);
-              },
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              if (task == null) {
-                await _dbHelper.insertTask({
-                  'title': titleController.text,
-                  'description': descController.text,
-                  'due_date': dueDate.toIso8601String(),
-                  'priority': priority,
-                  'completed': 0,
-                });
-              } else {
-                await _dbHelper.updateTask(task['id'], {
-                  'title': titleController.text,
-                  'description': descController.text,
-                  'due_date': dueDate.toIso8601String(),
-                  'priority': priority,
-                  'completed': task['completed'],
-                });
-              }
-              _refreshTaskList();
-              Navigator.pop(context);
-            },
-            child: const Text('Save'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
       ),
     );
   }
@@ -130,12 +137,10 @@ class _TaskPageState extends State<TaskPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Task Manager'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showTaskDialog(),
-          ),
-        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showTaskDialog(),
+        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
@@ -191,13 +196,19 @@ class _TaskPageState extends State<TaskPage> {
                       trailing: Wrap(
                         spacing: 12,
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () => _showTaskDialog(task: task),
+                          Tooltip(
+                            message: 'Edit Task',
+                            child: IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () => _showTaskDialog(task: task),
+                            ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _deleteTask(task['id']),
+                          Tooltip(
+                            message: 'Delete Task',
+                            child: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _deleteTask(task['id']),
+                            ),
                           ),
                         ],
                       ),
@@ -212,3 +223,4 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 }
+
