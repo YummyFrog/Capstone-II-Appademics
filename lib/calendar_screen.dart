@@ -13,12 +13,105 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+  final Map<DateTime, List<Map<String, dynamic>>> _events = {};
+
+  final _eventTypes = {
+    'Session': Colors.blue,
+    'Reminder': Colors.orange,
+    'Assignment': Colors.green,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+  }
+
+  void _addOrEditEvent({Map<String, dynamic>? existingEvent, int? index}) {
+    final titleController = TextEditingController(
+      text: existingEvent != null ? existingEvent['title'] : '',
+    );
+    String selectedType = existingEvent != null ? existingEvent['type'] : 'Session';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(existingEvent == null ? 'Add Event' : 'Edit Event'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Event Title'),
+            ),
+            const SizedBox(height: 10),
+            DropdownButton<String>(
+              value: selectedType,
+              isExpanded: true,
+              items: _eventTypes.keys
+                  .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                  .toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    selectedType = value;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              if (titleController.text.isEmpty) return;
+
+              final event = {
+                'title': titleController.text,
+                'type': selectedType,
+              };
+
+              setState(() {
+                final eventsForDay = _events[_selectedDay] ?? [];
+                if (existingEvent != null && index != null) {
+                  eventsForDay[index] = event;
+                } else {
+                  eventsForDay.add(event);
+                }
+                _events[_selectedDay!] = eventsForDay;
+              });
+
+              Navigator.pop(context);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteEvent(int index) {
+    setState(() {
+      _events[_selectedDay]!.removeAt(index);
+      if (_events[_selectedDay]!.isEmpty) {
+        _events.remove(_selectedDay);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final selectedEvents = _events[_selectedDay] ?? [];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendar'),
         backgroundColor: Colors.blueAccent,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _addOrEditEvent(),
+        child: const Icon(Icons.add),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -49,10 +142,39 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
             const SizedBox(height: 20),
             if (_selectedDay != null)
-              Text(
-                'Selected Date: ${_selectedDay!.toLocal()}'.split(' ')[0],
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Events on ${_selectedDay!.toLocal()}'.split(' ')[0],
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
               ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: selectedEvents.length,
+                itemBuilder: (context, index) {
+                  final event = selectedEvents[index];
+                  final color = _eventTypes[event['type']] ?? Colors.grey;
+
+                  return Card(
+                    child: ListTile(
+                      leading: CircleAvatar(backgroundColor: color),
+                      title: Text(event['title']),
+                      subtitle: Text(event['type']),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteEvent(index),
+                      ),
+                      onTap: () => _addOrEditEvent(
+                        existingEvent: event,
+                        index: index,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
