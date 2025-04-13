@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:appademics/calendar_screen.dart';
-import 'package:appademics/qr_code_screen.dart';
-import 'package:appademics/profile_screen.dart' as profile;  // Added prefix
-import 'package:appademics/task_manager_screen.dart';
-import 'package:appademics/settings_screen.dart' as app_settings;  // Added prefix
-import 'package:appademics/help_support_screen.dart';
+import 'calendar_screen.dart';
+import 'qr_code_screen.dart';
+import 'stu_profile_screen.dart';
+import 'task_manager_screen.dart';
+import 'settings_screen.dart'; // Make sure this imports the updated version
+import 'help_support_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class StuHomeScreen extends StatefulWidget {
+  const StuHomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _StuHomeScreenState createState() => _StuHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _StuHomeScreenState extends State<StuHomeScreen> {
   int _selectedIndex = 0;
   bool _isMenuOpen = false;
   final TextEditingController _searchController = TextEditingController();
@@ -21,13 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const Center(
       child: Text(
-        'Welcome Tutor',
+        'Welcome Student',
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     ),
     const CalendarScreen(),
     const QRCodeScreen(),
-    const profile.ProfileScreen(), // Updated with prefix
+    const StuProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -170,7 +170,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const app_settings.SettingsScreen(isTutor: true), // Updated with prefix
+                              // Updated to explicitly set isTutor: false
+                              builder: (context) => const SettingsScreen(isTutor: false),
                             ),
                           );
                         },

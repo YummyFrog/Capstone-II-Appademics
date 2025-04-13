@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class UserSettingsScreen extends StatefulWidget {
-  const UserSettingsScreen({super.key});
+class SettingsScreen extends StatefulWidget {
+  final bool isTutor; // Added parameter to distinguish user type
+  
+  const SettingsScreen({super.key, this.isTutor = false}); // Default to student
 
   @override
-  _UserSettingsScreenState createState() => _UserSettingsScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _UserSettingsScreenState extends State<UserSettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   bool _emailNotifications = false;
   bool _pushNotifications = false;
   String _privacySetting = 'Public';
@@ -21,18 +23,58 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: Text(widget.isTutor ? 'Tutor Settings' : 'Student Settings'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
+          // User-type specific settings section
+          ExpansionTile(
+            title: Text(widget.isTutor ? 'Tutor Tools' : 'Student Tools'),
+            children: [
+              if (widget.isTutor) ...[
+                ListTile(
+                  leading: const Icon(Icons.group),
+                  title: const Text('Manage Students'),
+                  onTap: () => _showFeatureNotAvailable(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.class_),
+                  title: const Text('Class Management'),
+                  onTap: () => _showFeatureNotAvailable(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.assignment),
+                  title: const Text('Assignment Creator'),
+                  onTap: () => _showFeatureNotAvailable(context),
+                ),
+              ] else ...[
+                ListTile(
+                  leading: const Icon(Icons.school),
+                  title: const Text('My Courses'),
+                  onTap: () => _showFeatureNotAvailable(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.assignment_turned_in),
+                  title: const Text('My Assignments'),
+                  onTap: () => _showFeatureNotAvailable(context),
+                ),
+              ],
+            ],
+          ),
+
+          // Common settings sections
           ExpansionTile(
             title: const Text('Account Settings'),
             children: [
               ListTile(
+                leading: const Icon(Icons.person),
                 title: const Text('Profile Management'),
                 onTap: _showProfileManagementDialog,
               ),
               ListTile(
+                leading: const Icon(Icons.lock),
                 title: const Text('Password Management'),
                 onTap: _showPasswordManagementDialog,
               ),
@@ -42,11 +84,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             title: const Text('Notification Settings'),
             children: [
               SwitchListTile(
+                secondary: const Icon(Icons.email),
                 title: const Text('Email Notifications'),
                 value: _emailNotifications,
                 onChanged: (val) => setState(() => _emailNotifications = val),
               ),
               SwitchListTile(
+                secondary: const Icon(Icons.notifications),
                 title: const Text('Push Notifications'),
                 value: _pushNotifications,
                 onChanged: (val) => setState(() => _pushNotifications = val),
@@ -57,6 +101,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             title: const Text('Privacy Settings'),
             children: [
               ListTile(
+                leading: const Icon(Icons.security),
                 title: const Text('Data Privacy'),
                 onTap: _showPrivacySettingsDialog,
               ),
@@ -66,6 +111,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             title: const Text('Language & Accessibility'),
             children: [
               ListTile(
+                leading: const Icon(Icons.language),
                 title: const Text('Language Preferences'),
                 onTap: _showLanguageSettingsDialog,
               ),
@@ -74,9 +120,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              // Handle save action
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Settings Saved')),
+                SnackBar(content: Text('${widget.isTutor ? 'Tutor' : 'Student'} settings saved')),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -91,23 +136,33 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     );
   }
 
+  // Helper method to show feature placeholder
+  void _showFeatureNotAvailable(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${widget.isTutor ? 'Tutor' : 'Student'} feature coming soon!')),
+    );
+  }
+
+  // Rest of your existing dialog methods remain exactly the same
   void _showProfileManagementDialog() {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Profile Management'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              decoration: const InputDecoration(labelText: 'Name'),
-              onChanged: (val) => setState(() => _name = val),
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Email'),
-              onChanged: (val) => setState(() => _email = val),
-            ),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: const InputDecoration(labelText: 'Name'),
+                onChanged: (val) => setState(() => _name = val),
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Email'),
+                onChanged: (val) => setState(() => _email = val),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
@@ -130,34 +185,42 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Password Management'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Current Password'),
-              onChanged: (val) => setState(() => _currentPassword = val),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'New Password'),
-              onChanged: (val) => setState(() => _newPassword = val),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
-              onChanged: (val) => setState(() => _confirmPassword = val),
-            ),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Current Password'),
+                onChanged: (val) => setState(() => _currentPassword = val),
+              ),
+              TextField(
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'New Password'),
+                onChanged: (val) => setState(() => _newPassword = val),
+              ),
+              TextField(
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Confirm Password'),
+                onChanged: (val) => setState(() => _confirmPassword = val),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Password changed successfully!')),
-              );
+              if (_newPassword == _confirmPassword) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Password changed successfully!')),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Passwords do not match')),
+                );
+              }
             },
             child: const Text('Change Password'),
           ),
@@ -173,6 +236,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         title: const Text('Privacy Settings'),
         content: DropdownButton<String>(
           value: _privacySetting,
+          isExpanded: true,
           items: ['Public', 'Friends Only', 'Private']
               .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
@@ -193,6 +257,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         title: const Text('Language Preferences'),
         content: DropdownButton<String>(
           value: _selectedLanguage,
+          isExpanded: true,
           items: ['English', 'Spanish', 'French']
               .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),

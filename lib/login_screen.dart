@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'home_screen.dart' as tutor;             // Use 'tutor.HomeScreen'
+import 'stu_home_screen.dart' as student;       // Use 'student.StuHomeScreen'
 import 'register_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,15 +21,28 @@ class _LoginPageState extends State<LoginPage> {
       String username = _usernameController.text;
       String password = _passwordController.text;
 
-      if (username == 'user' && password == 'user') {
+      if (username == 'student' && password == 'student') {
         setState(() {
           _errorMessage = '';
         });
 
+        // Navigate to student home screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
+            builder: (context) => const student.StuHomeScreen(),
+          ),
+        );
+      } else if (username == 'tutor' && password == 'tutor') {
+        setState(() {
+          _errorMessage = '';
+        });
+
+        // Navigate to tutor home screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const tutor.HomeScreen(),
           ),
         );
       } else {

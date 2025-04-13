@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'database_helper.dart';
 
-class TaskPage extends StatefulWidget {
-  const TaskPage({super.key});
+class TaskManagerScreen extends StatefulWidget {
+  const TaskManagerScreen({super.key});
 
   @override
-  State<TaskPage> createState() => _TaskPageState();
+  State<TaskManagerScreen> createState() => _TaskManagerScreenState();
 }
 
-class _TaskPageState extends State<TaskPage> {
+class _TaskManagerScreenState extends State<TaskManagerScreen> {
   final DatabaseHelper _dbHelper = DatabaseHelper();
   List<Map<String, dynamic>> _tasks = [];
   String _searchQuery = '';
@@ -223,4 +223,3 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 }
-
