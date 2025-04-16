@@ -12,6 +12,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  DateTime _normalizeDate(DateTime date) => DateTime(date.year, date.month, date.day);
 
   final Map<DateTime, List<Map<String, dynamic>>> _events = {};
 
@@ -25,6 +26,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
+
   }
 
   void _addOrEditEvent({Map<String, dynamic>? existingEvent, int? index}) {
@@ -37,29 +39,33 @@ class _CalendarScreenState extends State<CalendarScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(existingEvent == null ? 'Add Event' : 'Edit Event'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(labelText: 'Event Title'),
-            ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              value: selectedType,
-              isExpanded: true,
-              items: _eventTypes.keys
-                  .map((type) => DropdownMenuItem(value: type, child: Text(type)))
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    selectedType = value;
-                  });
-                }
-              },
-            ),
-          ],
+        content: StatefulBuilder(
+          builder: (context, setModalState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'Event Title'),
+                ),
+                const SizedBox(height: 10),
+                DropdownButton<String>(
+                  value: selectedType,
+                  isExpanded: true,
+                  items: _eventTypes.keys
+                      .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setModalState(() {
+                        selectedType = value;
+                      });
+                    }
+                  },
+                ),
+              ],
+            );
+          },
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
@@ -73,13 +79,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
               };
 
               setState(() {
-                final eventsForDay = _events[_selectedDay] ?? [];
+                final normalizedDay = _normalizeDate(_selectedDay!);
+                final eventsForDay = _events[normalizedDay] ?? [];
                 if (existingEvent != null && index != null) {
                   eventsForDay[index] = event;
                 } else {
                   eventsForDay.add(event);
                 }
-                _events[_selectedDay!] = eventsForDay;
+                _events[normalizedDay] = eventsForDay;
               });
 
               Navigator.pop(context);
@@ -93,16 +100,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _deleteEvent(int index) {
     setState(() {
-      _events[_selectedDay]!.removeAt(index);
-      if (_events[_selectedDay]!.isEmpty) {
-        _events.remove(_selectedDay);
+      final normalizedDay = _normalizeDate(_selectedDay!);
+      _events[normalizedDay]!.removeAt(index);
+      if (_events[normalizedDay]!.isEmpty) {
+        _events.remove(normalizedDay);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedEvents = _events[_selectedDay] ?? [];
+    final selectedEvents = _events[_normalizeDate(_selectedDay!)] ?? [];
+
 
     return Scaffold(
       appBar: AppBar(
