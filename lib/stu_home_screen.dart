@@ -5,6 +5,7 @@ import 'stu_profile_screen.dart';
 import 'task_manager_screen.dart';
 import 'settings_screen.dart'; // Make sure this imports the updated version
 import 'help_support_screen.dart';
+import 'grid_view_tutor_profiles.dart'; // Adds a grid view of tutor profiles
 
 class StuHomeScreen extends StatefulWidget {
   const StuHomeScreen({super.key});
@@ -19,12 +20,28 @@ class _StuHomeScreenState extends State<StuHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   final List<Widget> _screens = [
-    const Center(
-      child: Text(
-        'Welcome Student',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
+
+//
+Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Text(
+            'Welcome Student',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Expanded(child: GridViewTutorProfiles()),
+      ],
     ),
+
+//    const Center(
+//      child: Text(
+//        'Welcome Student',
+//        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+//      ),
+//    ),
     const CalendarScreen(),
     const QRCodeScreen(),
     const StuProfileScreen(),

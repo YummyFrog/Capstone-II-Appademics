@@ -5,6 +5,8 @@ import 'package:appademics/profile_screen.dart' as profile;  // Added prefix
 import 'package:appademics/task_manager_screen.dart';
 import 'package:appademics/settings_screen.dart' as app_settings;  // Added prefix
 import 'package:appademics/help_support_screen.dart';
+import 'package:appademics/grid_view_tutor_profiles.dart'; // Grid view of tutor profiles
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,12 +21,26 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   final List<Widget> _screens = [
-    const Center(
-      child: Text(
-        'Welcome Tutor',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Text(
+            'Welcome Tutor',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Expanded(child: GridViewTutorProfiles()),
+    ],
+  ),
+
+//    const Center(
+//      child: Text(
+//        'Welcome Tutor',
+//        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+//      ),
+//    ),
     const CalendarScreen(),
     const QRCodeScreen(),
     const profile.ProfileScreen(), // Updated with prefix
@@ -134,6 +150,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
+            
+            
+            
             ],
           ),
           GestureDetector(
