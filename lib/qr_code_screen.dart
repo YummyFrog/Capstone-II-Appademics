@@ -39,9 +39,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('QR Code Scanner'),
-      ),
+//      appBar: AppBar(
+//        title: const Text('QR Code Scanner'),
+//      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

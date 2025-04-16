@@ -114,16 +114,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calendar'),
-        backgroundColor: Colors.blueAccent,
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addOrEditEvent(),
         child: const Icon(Icons.add),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0, bottom: 16.0),
         child: Column(
           children: [
             TableCalendar(

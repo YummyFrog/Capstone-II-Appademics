@@ -35,16 +35,31 @@ class _HomeScreenState extends State<HomeScreen> {
     ],
   ),
 
-//    const Center(
-//      child: Text(
-//        'Welcome Tutor',
-//        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//      ),
-//    ),
+
     const CalendarScreen(),
     const QRCodeScreen(),
     const profile.ProfileScreen(), // Updated with prefix
   ];
+
+final List<Widget> _titleWidgets = [
+  const Text(
+    'Home',
+    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+  ),
+  const Text(
+    'Calendar',
+    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+  ),
+  const Text(
+    'QR Code',
+    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+  ),
+  const Text(
+    'Profile', 
+    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+  ),
+];
+ 
 
   void _onItemTapped(int index) {
     setState(() {
@@ -91,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        backgroundColor: Colors.blue, // Changed the color of the app bar
+        title: _titleWidgets[_selectedIndex],
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: _toggleMenu,
@@ -101,22 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Column(
             children: [
-              Container(
-                height: 60,
-                color: Colors.blue,
-                alignment: Alignment.center,
-                child: const Text(
-                  'Appademics',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
               if (isHomePage)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   child: Row(
                     children: [
                       Expanded(
@@ -162,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
             child: Padding(
-              padding: EdgeInsets.only(top: isHomePage ? 128.0 : 60.0),
+              padding: EdgeInsets.only(top: _selectedIndex == 0 ? 64.0 : 0.0), // Edited so only the homepage has padding
               child: _screens[_selectedIndex],
             ),
           ),
