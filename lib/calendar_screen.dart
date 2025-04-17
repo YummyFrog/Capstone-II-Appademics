@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -14,6 +16,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? _selectedDay;
   DateTime _normalizeDate(DateTime date) => DateTime(date.year, date.month, date.day);
 
+  Future<void> _saveEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    final Map<String, dynamic> jsonEvents = {
+      for (var entry in _events.entries)
+        entry.key.toIso8601String(): entry.value
+    };
+    prefs.setString('events', json.encode(jsonEvents));
+  }
+
+  Future<void> _loadEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('events');
+    if (data != null) {
+      final Map<String, dynamic> decoded = json.decode(data);
+      final Map<DateTime, List<Map<String, dynamic>>> loadedEvents = {};
+      decoded.forEach((key, value) {
+        loadedEvents[DateTime.parse(key)] = List<Map<String, dynamic>>.from(value);
+      });
+      setState(() {
+        _events.clear();
+        _events.addAll(loadedEvents);
+      });
+    }
+  }
+
+
   final Map<DateTime, List<Map<String, dynamic>>> _events = {};
 
   final _eventTypes = {
@@ -26,6 +54,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
+    _loadEvents();
 
   }
 
@@ -88,6 +117,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 }
                 _events[normalizedDay] = eventsForDay;
               });
+              _saveEvents();
 
               Navigator.pop(context);
             },
@@ -106,6 +136,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _events.remove(normalizedDay);
       }
     });
+    _saveEvents();
   }
 
   @override
