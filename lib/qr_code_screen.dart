@@ -36,12 +36,18 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
     controller!.resumeCamera();
   }
 
+  void _markAttendance(String code) {
+    setState(() {
+      qrText = code;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Attendance marked for: $code')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(
-//        title: const Text('QR Code Scanner'),
-//      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -61,23 +67,30 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  // child: QRView(
-                  //   key: qrKey,
-                  //   onQRViewCreated: _onQRViewCreated,
-                  // ),
+                      //child: QRView(
+                          //key: qrKey,
+                          //onQRViewCreated: _onQRViewCreated,
+                        //),
                 ),
               ),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              flex: 1,
-              child: Center(
-                child: Text(
-                  qrText ?? 'Scan a code',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            if (qrText != null)
+              Text(
+                '$qrText',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
                 ),
               ),
-            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _markAttendance('Student_ID');
+              },
+              child: const Text('Simulate QR Scan (Mark Attendance)'),
+            ),         
           ],
         ),
       ),
@@ -87,9 +100,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        qrText = scanData.code;
-      });
+      _markAttendance(scanData.code ?? 'Unknown Code');
     });
   }
 
